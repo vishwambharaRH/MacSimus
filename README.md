@@ -18,7 +18,8 @@ to remain with me.
 C++ for audio manipulation, Swift for UI.
 
 ## When?
-Let's see.
+Intending completion by June-July.
 
-## Baseball.
-Huh?
+## Who (should be able to) use it?
+Anyone who's serious about having a non-mediocre audio experience on macOS.
+
