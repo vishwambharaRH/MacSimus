@@ -1,2 +1,0 @@
-/usr/bin/ar qc libaudio_engine.a CMakeFiles/audio_engine.dir/audio/AudioEngine.cpp.o
-/usr/bin/ranlib libaudio_engine.a
