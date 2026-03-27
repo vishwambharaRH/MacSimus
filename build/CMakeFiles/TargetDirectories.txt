@@ -1,0 +1,6 @@
+/Users/vishwam/MacSimus/build/CMakeFiles/audio_engine.dir
+/Users/vishwam/MacSimus/build/CMakeFiles/audio_wrapper.dir
+/Users/vishwam/MacSimus/build/CMakeFiles/dsp_test.dir
+/Users/vishwam/MacSimus/build/CMakeFiles/audio_test.dir
+/Users/vishwam/MacSimus/build/CMakeFiles/edit_cache.dir
+/Users/vishwam/MacSimus/build/CMakeFiles/rebuild_cache.dir
