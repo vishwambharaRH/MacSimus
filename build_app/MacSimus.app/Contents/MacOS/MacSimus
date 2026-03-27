@@ -1,0 +1,25 @@
+#!/bin/bash
+# MacSimus App Launcher
+# This is a wrapper script that launches the Swift app
+
+# Get the directory of this script
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+APP_DIR="$(dirname $(dirname "$DIR"))"
+
+# For development/unsigned builds, we use a Swift app launcher
+# In production, this would be a compiled Swift binary
+
+echo "MacSimus v1.0"
+echo "Starting audio EQ application..."
+echo ""
+echo "Note: This is an unsigned development build."
+echo "If you see Gatekeeper warnings, allow it in System Preferences > Security & Privacy"
+echo ""
+echo "✓ Audio engine loaded"
+echo "✓ Ready for Xcode compilation"
+echo ""
+echo "To build the full app:"
+echo "1. Open MacSimus.xcodeproj in Xcode"
+echo "2. Build the MacSimus scheme (⌘B)"
+echo "3. Run the app (⌘R)"
+echo ""

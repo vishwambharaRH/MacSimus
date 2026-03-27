@@ -1,11 +1,11 @@
 import SwiftUI
 
 /**
- * ContentView: Main UI for MacSimus EQ
- * Shows 12 EQ bands with frequency distribution
+ * ContentView: Main UI for MacSimus EQ with app and system-wide modes
  */
 struct ContentView: View {
     @StateObject private var audioManager = AudioManager.shared
+    @State private var selectedTab = 0
     
     // Frequency labels for 12 bands (log-spaced from 20 Hz to 20 kHz)
     let frequencies = [
@@ -27,7 +27,7 @@ struct ContentView: View {
             )
             .ignoresSafeArea()
             
-            VStack(spacing: 24) {
+            VStack(spacing: 0) {
                 // Header
                 VStack(spacing: 8) {
                     Text("MacSimus")
@@ -40,7 +40,35 @@ struct ContentView: View {
                         .foregroundColor(.secondary)
                 }
                 .padding(.top, 20)
+                .padding(.bottom, 16)
                 
+                // Tab selector
+                Picker("Mode", selection: $selectedTab) {
+                    Text("App Audio").tag(0)
+                    Text("System Audio").tag(1)
+                }
+                .pickerStyle(.segmented)
+                .padding(.horizontal, 20)
+                .padding(.bottom, 20)
+                
+                // Content based on selected tab
+                if selectedTab == 0 {
+                    appAudioContent
+                } else {
+                    SystemAudioView()
+                        .frame(maxHeight: .infinity)
+                }
+            }
+        }
+        .preferredColorScheme(.dark)
+    }
+    
+    // MARK: - App Audio Tab Content
+    
+    @ViewBuilder
+    var appAudioContent: some View {
+        ScrollView {
+            VStack(spacing: 20) {
                 // Status indicator
                 HStack {
                     Circle()
@@ -73,7 +101,14 @@ struct ContentView: View {
                 }
                 .padding(.horizontal, 20)
                 
-                // Preset buttons
+                // EQ Curve Graph (NEW - Phase 5)
+                EQCurveView(audioManager: audioManager)
+                
+                // Presets Section (NEW - Phase 5)
+                PresetsView(audioManager: audioManager)
+                    .padding(.horizontal, 20)
+                
+                // Preset buttons (Quick access)
                 HStack(spacing: 12) {
                     Button("Flat") {
                         audioManager.resetToFlat()
@@ -93,36 +128,36 @@ struct ContentView: View {
                 .padding(.horizontal, 20)
                 
                 // EQ Bands Grid
-                ScrollView {
-                    VStack(spacing: 16) {
-                        // Split into 6x2 grid for better layout
-                        ForEach(0..<2, id: \.self) { row in
-                            HStack(spacing: 16) {
-                                ForEach(0..<6, id: \.self) { col in
-                                    let bandIndex = row * 6 + col
-                                    if bandIndex < 12 {
-                                        VStack(spacing: 0) {
-                                            EQBandView(
-                                                bandIndex: bandIndex,
-                                                frequency: frequencies[bandIndex],
-                                                gain: $audioManager.gains[bandIndex],
-                                                action: { newValue in
-                                                    audioManager.setGain(band: bandIndex, value: newValue)
-                                                }
-                                            )
-                                        }
-                                        .frame(maxWidth: .infinity)
-                                        .padding(12)
-                                        .background(Color(red: 0.15, green: 0.15, blue: 0.2))
-                                        .cornerRadius(8)
+                VStack(spacing: 16) {
+                    // Split into 6x2 grid for better layout
+                    ForEach(0..<2, id: \.self) { row in
+                        HStack(spacing: 16) {
+                            ForEach(0..<6, id: \.self) { col in
+                                let bandIndex = row * 6 + col
+                                if bandIndex < 12 {
+                                    VStack(spacing: 0) {
+                                        EQBandView(
+                                            bandIndex: bandIndex,
+                                            frequency: frequencies[bandIndex],
+                                            gain: $audioManager.gains[bandIndex],
+                                            action: { newValue in
+                                                audioManager.setGain(band: bandIndex, value: newValue)
+                                            }
+                                        )
                                     }
+                                    .frame(maxWidth: .infinity)
+                                    .padding(12)
+                                    .background(Color(red: 0.15, green: 0.15, blue: 0.2))
+                                    .cornerRadius(8)
                                 }
                             }
-                            .padding(.horizontal, 20)
                         }
+                        .padding(.horizontal, 20)
                     }
-                    .padding(.vertical, 16)
                 }
+                
+                // Advanced Settings (NEW - Phase 5)
+                AdvancedSettingsView(audioManager: audioManager)
                 
                 // Footer info
                 VStack(spacing: 4) {
@@ -133,10 +168,9 @@ struct ContentView: View {
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
-                .padding(.bottom, 20)
+                .padding(.vertical, 20)
             }
         }
-        .preferredColorScheme(.dark)
     }
 }
 

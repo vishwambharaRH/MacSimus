@@ -1,0 +1,16 @@
+{
+    "archiveVersion": 1,
+    "objectVersion": 46,
+    "objects": {
+        "PBXProject": {
+            "ClassName": "PBXProject",
+            "MainGroup": "MainGroup",
+            "attributes": {
+                "BuildIndependentTargetsInParallel": 1,
+                "LastUpgradeCheck": "1320",
+                "TargetAttributes": {}
+            }
+        }
+    },
+    "rootObject": "PBXProject"
+}

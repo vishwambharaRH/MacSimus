@@ -9,6 +9,9 @@ import AVFoundation
 class AudioManager: NSObject, ObservableObject {
     @Published var isRunning = false
     @Published var gains: [Float] = Array(repeating: 0.0, count: 12)
+    @Published var qFactors: [Float] = Array(repeating: 0.707, count: 12)
+    @Published var frequencies: [Float] = [20, 35, 61, 106, 185, 320, 560, 970, 1700, 2900, 5100, 8800]
+    @Published var masterGain: Float = 0.0
     @Published var statusMessage = "Ready"
     
     static let shared = AudioManager()
@@ -110,5 +113,45 @@ class AudioManager: NSObject, ObservableObject {
         setGain(band: 4, value: 4.0)
         setGain(band: 5, value: 3.0)
         statusMessage = "Applied vocal enhance preset"
+    }
+    
+    func setQFactor(band: Int, value: Float) {
+        guard band >= 0 && band < 12 else { return }
+        qFactors[band] = value
+        // Q-factor adjustment would be passed to C++ engine here
+        // For now, stored in Swift state for the UI
+    }
+    
+    func setFrequency(band: Int, value: Float) {
+        guard band >= 0 && band < 12 else { return }
+        frequencies[band] = value
+        // Frequency adjustment would be passed to C++ engine here
+        // For now, stored in Swift state for the UI
+    }
+    
+    func setMasterGain(value: Float) {
+        masterGain = value
+        // Master gain adjustment would be applied to all channels
+        // For now, stored in Swift state for the UI
+    }
+    
+    func resetBandToDefaults(_ band: Int) {
+        guard band >= 0 && band < 12 else { return }
+        setGain(band: band, value: 0.0)
+        setQFactor(band: band, value: 0.707)
+        
+        let defaultFrequencies: [Float] = [20, 35, 61, 106, 185, 320, 560, 970, 1700, 2900, 5100, 8800]
+        setFrequency(band: band, value: defaultFrequencies[band])
+        
+        statusMessage = "Reset band \(band) to defaults"
+    }
+    
+    func applyPreset(_ preset: EQPreset) {
+        for i in 0..<12 {
+            setGain(band: i, value: preset.gains[i])
+            setQFactor(band: i, value: preset.qFactors[i])
+            setFrequency(band: i, value: preset.frequencies[i])
+        }
+        statusMessage = "Applied preset: \(preset.name)"
     }
 }

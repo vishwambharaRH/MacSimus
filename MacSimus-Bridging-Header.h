@@ -9,5 +9,6 @@
 #define MacSimus_Bridging_Header_h
 
 #import "audio/AudioEngineWrapper.h"
+#import "audio/VirtualAudioDeviceWrapper.h"
 
 #endif /* MacSimus_Bridging_Header_h */
